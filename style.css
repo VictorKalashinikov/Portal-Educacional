@@ -266,3 +266,13 @@ body {
 .submit-btn { background-color: var(--navy-dark); color: white; border: none; padding: 12px 20px; font-size: 1rem; font-weight: bold; border-radius: var(--radius-sm); cursor: pointer; align-self: flex-start; transition: background-color 0.2s; }
 .submit-btn:hover { background-color: var(--blue-primary); }
 .feedback-msg { margin-top: 15px; font-weight: bold; color: #2e7d32; }
+
+.site-footer {
+    background-color: var(--navy-dark);
+    color: white;
+    text-align: center;
+    padding: 16px 20px;
+    margin-top: auto;
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
