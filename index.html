@@ -53,16 +53,32 @@
       </div>
 
       <div class="cards-grid">
-        <div class="card">
+        <!-- CARD 1: Lista de Tarefas / Atividades -->
+        <div class="card todo-card">
           <h3>Atividade 1</h3>
           <p class="card-subtitle">Atividades não enviadas:</p>
-          <ul class="subjects-list">
-            <li>Geografia</li>
-            <li>Química</li>
+          <ul id="todo-list-pending" class="todo-list">
+            <li>
+              <label><input type="checkbox" onchange="toggleTask(this)"> Geografia</label>
+              <i class="fas fa-trash delete-icon" onclick="deleteTask(this)"></i>
+            </li>
+            <li>
+              <label><input type="checkbox" onchange="toggleTask(this)"> Química</label>
+              <i class="fas fa-trash delete-icon" onclick="deleteTask(this)"></i>
+            </li>
           </ul>
+
+          <div class="add-task-box">
+            <input type="text" id="new-task-input" placeholder="Nova atividade...">
+            <button onclick="addTask()"><i class="fas fa-plus"></i></button>
+          </div>
+
           <hr class="card-divider">
+
           <h3>ATIVIDADES 2</h3>
           <p class="card-subtitle">Atividades realizadas</p>
+          <ul id="todo-list-completed" class="todo-list completed-list">
+          </ul>
         </div>
 
         <div class="card">

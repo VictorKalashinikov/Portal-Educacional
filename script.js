@@ -1,8 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // Identify current page based on body dataset
   const currentPage = document.body.dataset.page;
 
-  // Highlight active link in navigation menu
   const navButtons = document.querySelectorAll('.nav-btn, .sub-link');
   navButtons.forEach(btn => {
     if (btn.dataset.page === currentPage) {
@@ -12,7 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Search input interaction (filtering rows in Faltas table if present)
   const searchInput = document.querySelector('.search-bar input');
   if (searchInput) {
     searchInput.addEventListener('input', (e) => {
@@ -25,7 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Print button functionality
   const printBtn = document.getElementById('print-btn');
   if (printBtn) {
     printBtn.addEventListener('click', () => {
@@ -33,7 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Contact Form Handling
   const contactForm = document.getElementById('contact-form');
   if (contactForm) {
     contactForm.addEventListener('submit', (e) => {
@@ -43,4 +38,50 @@ document.addEventListener('DOMContentLoaded', () => {
       contactForm.reset();
     });
   }
+
+  // Permitir adicionar tarefa pressionando a tecla 'Enter'
+  const taskInput = document.getElementById('new-task-input');
+  if (taskInput) {
+    taskInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        addTask();
+      }
+    });
+  }
 });
+
+// Funções globais do To-Do List
+function toggleTask(checkbox) {
+  const listItem = checkbox.closest('li');
+  const pendingList = document.getElementById('todo-list-pending');
+  const completedList = document.getElementById('todo-list-completed');
+
+  if (checkbox.checked) {
+    completedList.appendChild(listItem);
+  } else {
+    pendingList.appendChild(listItem);
+  }
+}
+
+function addTask() {
+  const input = document.getElementById('new-task-input');
+  const taskName = input.value.trim();
+
+  if (!taskName) return;
+
+  const pendingList = document.getElementById('todo-list-pending');
+  const li = document.createElement('li');
+
+  li.innerHTML = `
+    <label><input type="checkbox" onchange="toggleTask(this)"> ${taskName}</label>
+    <i class="fas fa-trash delete-icon" onclick="deleteTask(this)"></i>
+  `;
+
+  pendingList.appendChild(li);
+  input.value = '';
+}
+
+function deleteTask(element) {
+  const listItem = element.closest('li');
+  listItem.remove();
+}
