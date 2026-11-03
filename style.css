@@ -1,0 +1,425 @@
+/* Base Reset & Variables */
+:root {
+  --navy-dark: #3b3d5c;
+  --blue-primary: #3371a3;
+  --bg-light-blue: #dcf0fa;
+  --card-bg: #f2f7f9;
+  --text-dark: #1e2229;
+  --border-color: #9cbccc;
+  --radius-lg: 18px;
+  --radius-md: 10px;
+  --radius-sm: 6px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: var(--bg-light-blue);
+  color: var(--text-dark);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Top Navigation Bar */
+.top-nav {
+  background-color: var(--navy-dark);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 24px;
+}
+
+.top-left {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.top-center {
+  flex: 1;
+  max-width: 320px;
+  margin: 0 20px;
+}
+
+.search-bar {
+  background-color: white;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  padding: 5px 14px;
+}
+
+.search-bar i {
+  color: #777;
+  margin-right: 8px;
+  font-size: 0.9rem;
+}
+
+.search-bar input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 0.95rem;
+  color: var(--text-dark);
+}
+
+.top-right .user-profile {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.user-avatar {
+  font-size: 1.8rem;
+}
+
+/* Sub Navigation Bar */
+.sub-nav {
+  background-color: var(--blue-primary);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 24px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.nav-title {
+  font-weight: 700;
+  font-size: 1.15rem;
+  margin-right: 15px;
+}
+
+.nav-btn {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.nav-btn:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.nav-btn.active {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+.sub-link {
+  color: white;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1rem;
+  margin-left: 10px;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.action-btn {
+  border: none;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.pill-btn {
+  background-color: white;
+  color: var(--navy-dark);
+}
+
+.dark-btn {
+  background-color: var(--navy-dark);
+  color: white;
+}
+
+/* Senai Logo Branding */
+.senai-logo {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  user-select: none;
+}
+
+.senai-logo.inline {
+  margin-right: 15px;
+}
+
+.fiep-text {
+  font-size: 0.7rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: -0.5px;
+  opacity: 0.9;
+}
+
+.senai-text {
+  font-size: 1.4rem;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: 0.5px;
+}
+
+/* Main Container */
+.main-container {
+  padding: 24px;
+  max-width: 1000px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.page-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Screen 1: Home */
+.welcome-card {
+  background-color: var(--navy-dark);
+  color: white;
+  padding: 20px 24px;
+  border-radius: var(--radius-lg);
+}
+
+.welcome-card h2 {
+  font-size: 1.6rem;
+  margin-bottom: 6px;
+}
+
+.welcome-card p {
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.card h3 {
+  color: var(--navy-dark);
+  font-size: 1.25rem;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.card-subtitle {
+  color: var(--navy-dark);
+  font-weight: bold;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.subjects-list {
+  list-style: none;
+  text-align: center;
+  margin-bottom: 15px;
+  font-weight: bold;
+  color: var(--navy-dark);
+}
+
+.subjects-list li {
+  margin-bottom: 3px;
+}
+
+.card-divider {
+  border: 0;
+  border-top: 1px solid var(--border-color);
+  margin: 10px 0 15px 0;
+}
+
+.card-body-text {
+  text-align: center;
+  color: var(--navy-dark);
+  margin-bottom: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 0.95rem;
+}
+
+.btn-link {
+  color: var(--navy-dark);
+  font-weight: 800;
+  text-decoration: none;
+  font-size: 1.1rem;
+  margin-top: auto;
+  display: inline-block;
+}
+
+.btn-link:hover {
+  text-decoration: underline;
+}
+
+/* Screen 2: Faltas */
+.summary-box {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.summary-icon {
+  font-size: 2rem;
+  color: var(--navy-dark);
+}
+
+.summary-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.summary-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--navy-dark);
+}
+
+.summary-info {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--navy-dark);
+}
+
+.table-container {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  position: relative;
+  padding-bottom: 40px;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th {
+  background-color: var(--navy-dark);
+  color: white;
+  padding: 12px 20px;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.data-table td {
+  padding: 10px 20px;
+  color: var(--navy-dark);
+  font-weight: bold;
+  font-size: 1.05rem;
+}
+
+.th-left, .td-left { text-align: left; }
+.th-center, .td-center { text-align: center; }
+.th-right, .td-right { text-align: right; }
+
+.row-highlight td {
+  background-color: #d8eef8;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+}
+
+.senai-table-footer {
+  position: absolute;
+  bottom: 8px;
+  right: 20px;
+  color: var(--navy-dark);
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+/* Screen 3 & 4: Grids (Horários e Notas) */
+.grid-schedule, .grid-grades {
+  display: grid;
+  gap: 10px;
+}
+
+.grid-schedule {
+  grid-template-columns: 1.2fr repeat(4, 1fr);
+}
+
+.grid-grades {
+  grid-template-columns: 1.5fr repeat(4, 1fr);
+}
+
+.cell {
+  padding: 12px 10px;
+  text-align: center;
+  font-weight: bold;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-cell {
+  background-color: white;
+  color: var(--text-dark);
+  font-size: 1.1rem;
+}
+
+.time-cell, .label-cell {
+  background-color: white;
+  color: var(--text-dark);
+  font-size: 1rem;
+}
+
+.label-cell {
+  justify-content: flex-start;
+  padding-left: 15px;
+}
+
+.content-cell {
+  background-color: white;
+  color: var(--text-dark);
+  font-size: 1rem;
+}

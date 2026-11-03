@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal educacional SEMANAL</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body data-page="horarios">
+  <!-- Top Navigation Bar -->
+  <header class="top-nav">
+    <div class="top-left">
+      <span id="page-title">Portal educacional SEMANAL</span>
+    </div>
+    <div class="top-center">
+      <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Buscar...">
+      </div>
+    </div>
+    <div class="top-right">
+      <div class="user-profile">
+        <i class="fas fa-user-circle user-avatar"></i>
+        <span class="user-name">Helena</span>
+        <i class="fas fa-chevron-down"></i>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sub Navigation Bar -->
+  <nav class="sub-nav">
+    <div class="nav-links">
+      <span class="nav-title">Quadro de Horários</span>
+      <a href="index.html" class="nav-btn" data-page="home"><i class="fas fa-home"></i> Home</a>
+      <a href="faltas.html" class="nav-btn" data-page="faltas"><i class="fas fa-user-graduate"></i> Faltas</a>
+      <a href="horarios.html" class="nav-btn" data-page="horarios"><i class="fas fa-calendar-alt"></i> Horários</a>
+      <a href="notas.html" class="nav-btn" data-page="notas"><i class="fas fa-graduation-cap"></i> Notas</a>
+    </div>
+    <div class="nav-actions">
+      <div class="senai-logo inline">
+        <span class="fiep-text">Sistema Fiep</span>
+        <span class="senai-text">SENAI</span>
+      </div>
+      <button class="action-btn pill-btn">Visão Mensal</button>
+      <button class="action-btn dark-btn" id="print-btn">Imprimir</button>
+    </div>
+  </nav>
+
+  <!-- Main Content Container -->
+  <main class="main-container">
+    <div class="page-content">
+      <div class="grid-schedule">
+        <!-- Header row -->
+        <div class="cell header-cell"></div>
+        <div class="cell header-cell">Segunda</div>
+        <div class="cell header-cell">Terça</div>
+        <div class="cell header-cell">Quarta</div>
+        <div class="cell header-cell">Quinta</div>
+
+        <!-- Row 1 -->
+        <div class="cell time-cell">13:00 – 13:45</div>
+        <div class="cell content-cell">D.S</div>
+        <div class="cell content-cell">D.S</div>
+        <div class="cell content-cell">D.S</div>
+        <div class="cell content-cell">D.S</div>
+
+        <!-- Row 2 -->
+        <div class="cell time-cell">13:45 – 14:30</div>
+        <div class="cell content-cell">D.S</div>
+        <div class="cell content-cell">D.S</div>
+        <div class="cell content-cell">D.S</div>
+        <div class="cell content-cell">D.S</div>
+
+        <!-- Row 3 -->
+        <div class="cell time-cell">15:15 – 15:30</div>
+        <div class="cell content-cell">D.S</div>
+        <div class="cell content-cell">Ingles</div>
+        <div class="cell content-cell">D.S</div>
+        <div class="cell content-cell">D.S</div>
+      </div>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
