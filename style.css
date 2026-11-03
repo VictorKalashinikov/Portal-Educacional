@@ -393,3 +393,121 @@ body {
     align-items: center;
   }
 }
+
+
+/* LOGIN E CADASTRO */
+.auth-card {
+    max-width: 500px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.auth-tabs {
+    display: flex;
+    gap: 10px;
+}
+
+.auth-tab {
+    flex: 1;
+    padding: 10px;
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--navy-dark);
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.auth-tab.active {
+    background-color: var(--navy-dark);
+    color: white;
+    border-color: var(--navy-dark);
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
+    position: absolute;
+    left: 12px;
+    color: var(--navy-dark);
+    font-size: 0.9rem;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: 10px 42px 10px 36px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    outline: none;
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    background-color: white;
+}
+
+.input-wrapper input:focus {
+    border-color: var(--blue-primary);
+    box-shadow: 0 0 0 2px rgba(51, 113, 163, 0.2);
+}
+
+.btn-toggle-eye {
+    position: absolute;
+    right: 8px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    color: var(--navy-dark);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-toggle-eye:hover {
+    background-color: var(--bg-light-blue);
+}
+
+.btn-block {
+    width: 100%;
+    padding: 12px;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.auth-feedback {
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.9rem;
+    min-height: 20px;
+}
+
+.auth-feedback.sucesso {
+    color: #15803d;
+}
+
+.auth-feedback.erro {
+    color: #b91c1c;
+}
+
+.is-hidden {
+    display: none !important;
+}

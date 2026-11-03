@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Educacional - Acesso</title>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body data-page="login">
+
+    <header class="top-nav">
+        <div class="top-left">
+            <span id="page-title">Portal Educacional - Acesso</span>
+        </div>
+
+        <div class="top-center">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Pesquisar no portal (ex: notas, faltas)...">
+            </div>
+        </div>
+
+        <div class="top-right">
+            <div class="user-profile">
+                <i class="fas fa-user-circle user-avatar"></i>
+                <span class="user-name" id="top-user-display">Helena</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+    </header>
+
+    <nav class="sub-nav">
+        <div class="nav-links">
+            <a href="index.html" class="nav-btn" data-page="home">
+                <i class="fas fa-home"></i> Home
+            </a>
+
+            <a href="faltas.html" class="nav-btn" data-page="faltas">
+                <i class="fas fa-user-graduate"></i> Faltas
+            </a>
+
+            <a href="horarios.html" class="nav-btn" data-page="horarios">
+                <i class="fas fa-calendar-alt"></i> Horários
+            </a>
+
+            <a href="notas.html" class="nav-btn" data-page="notas">
+                <i class="fas fa-graduation-cap"></i> Notas
+            </a>
+
+            <a href="login.html" class="nav-btn" data-page="login">
+                <i class="fas fa-user-lock"></i> Entrar
+            </a>
+
+            <a href="contato.html" class="sub-link" data-page="contato">Contato</a>
+            <a href="#" class="sub-link">Links</a>
+        </div>
+
+        <div class="senai-logo">
+            <span class="fiep-text">Sistema Fiep</span>
+            <span class="senai-text">SENAI</span>
+        </div>
+    </nav>
+
+    <main class="main-container">
+        <div class="page-content">
+
+            <div class="welcome-card">
+                <h2>Área de Autenticação</h2>
+                <p>Acesse seu perfil acadêmico para consultar notas, horários e frequência.</p>
+            </div>
+
+            <div class="card auth-card">
+
+                <div class="auth-tabs">
+                    <button type="button" id="tab-login" class="auth-tab active">
+                        Entrar
+                    </button>
+
+                    <button type="button" id="tab-cadastro" class="auth-tab">
+                        Cadastrar
+                    </button>
+                </div>
+
+                <hr class="card-divider">
+
+                <!-- FORMULÁRIO DE LOGIN -->
+                <form id="form-login" class="auth-form">
+
+                    <div class="form-group">
+                        <label for="login-identificacao">Usuário ou E-mail</label>
+
+                        <div class="input-wrapper">
+                            <i class="fas fa-user input-icon"></i>
+
+                            <input
+                                type="text"
+                                id="login-identificacao"
+                                placeholder="Digite seu usuário ou e-mail"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="login-senha">Senha</label>
+
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock input-icon"></i>
+
+                            <input
+                                type="password"
+                                id="login-senha"
+                                placeholder="Digite sua senha"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="btn-toggle-eye"
+                                data-target="login-senha"
+                                title="Ver ou ocultar senha"
+                            >
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="action-btn dark-btn btn-block">
+                        <i class="fas fa-sign-in-alt"></i> Acessar Portal
+                    </button>
+
+                    <p id="msg-login" class="auth-feedback"></p>
+
+                </form>
+
+                <!-- FORMULÁRIO DE CADASTRO -->
+                <form id="form-cadastro" class="auth-form is-hidden">
+
+                    <div class="form-group">
+                        <label for="cad-nome">Nome Completo</label>
+
+                        <div class="input-wrapper">
+                            <i class="fas fa-id-card input-icon"></i>
+
+                            <input
+                                type="text"
+                                id="cad-nome"
+                                placeholder="Digite seu nome completo"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cad-usuario">Nome de Usuário</label>
+
+                        <div class="input-wrapper">
+                            <i class="fas fa-user-tag input-icon"></i>
+
+                            <input
+                                type="text"
+                                id="cad-usuario"
+                                placeholder="Escolha um usuário"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cad-email">E-mail</label>
+
+                        <div class="input-wrapper">
+                            <i class="fas fa-envelope input-icon"></i>
+
+                            <input
+                                type="email"
+                                id="cad-email"
+                                placeholder="seuemail@exemplo.com"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cad-senha">Senha</label>
+
+                        <div class="input-wrapper">
+                            <i class="fas fa-key input-icon"></i>
+
+                            <input
+                                type="password"
+                                id="cad-senha"
+                                placeholder="Crie uma senha"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="btn-toggle-eye"
+                                data-target="cad-senha"
+                                title="Ver ou ocultar senha"
+                            >
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cad-confirma">Confirmar Senha</label>
+
+                        <div class="input-wrapper">
+                            <i class="fas fa-check-double input-icon"></i>
+
+                            <input
+                                type="password"
+                                id="cad-confirma"
+                                placeholder="Confirme a senha"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="btn-toggle-eye"
+                                data-target="cad-confirma"
+                                title="Ver ou ocultar senha"
+                            >
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="action-btn pill-btn btn-block">
+                        <i class="fas fa-user-plus"></i> Finalizar Cadastro
+                    </button>
+
+                    <p id="msg-cadastro" class="auth-feedback"></p>
+
+                </form>
+
+                <!-- PAINEL QUANDO LOGADO -->
+                <div id="logged-panel" class="auth-form is-hidden">
+
+                    <div class="summary-box">
+                        <div class="summary-icon">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+
+                        <div class="summary-text">
+                            <span class="summary-title" id="logged-title">
+                                Sessão Ativa
+                            </span>
+
+                            <span class="summary-info" id="logged-desc">
+                                Você está conectado ao portal.
+                            </span>
+                        </div>
+                    </div>
+
+                    <button type="button" id="btn-logout" class="action-btn dark-btn btn-block">
+                        <i class="fas fa-sign-out-alt"></i> Encerrar Sessão
+                    </button>
+
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <span class="footer-title"><i class="fas fa-graduation-cap"></i> Portal Educacional</span>
+                <span class="footer-copy">&copy; Portal Educacional. Todos os direitos reservados.</span>
+            </div>
+            <div class="footer-team">
+                <span class="team-badge"><i class="fas fa-users"></i> 2D e 3D &bull; Equipe 1</span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
