@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const currentPage = document.body.dataset.page;
 
   // Highlight active link in navigation menu
-  const navButtons = document.querySelectorAll('.nav-btn');
+  const navButtons = document.querySelectorAll('.nav-btn, .sub-link');
   navButtons.forEach(btn => {
     if (btn.dataset.page === currentPage) {
       btn.classList.add('active');
@@ -30,6 +30,17 @@ document.addEventListener('DOMContentLoaded', () => {
   if (printBtn) {
     printBtn.addEventListener('click', () => {
       window.print();
+    });
+  }
+
+  // Contact Form Handling
+  const contactForm = document.getElementById('contact-form');
+  if (contactForm) {
+    contactForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const feedback = document.getElementById('form-feedback');
+      feedback.textContent = 'Mensagem enviada com sucesso! Em breve entraremos em contato.';
+      contactForm.reset();
     });
   }
 });
