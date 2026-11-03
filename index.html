@@ -11,13 +11,11 @@
 <body data-page="home">
   <!-- Top Navigation Bar -->
   <header class="top-nav">
-    <div class="top-left">
-      <span id="page-title">Portal Educacional - HOME</span>
-    </div>
+    <div class="top-left"><span id="page-title">Portal Educacional - HOME</span></div>
     <div class="top-center">
       <div class="search-bar">
         <i class="fas fa-search"></i>
-        <input type="text" placeholder="Buscar...">
+        <input type="text" placeholder="Pesquisar no portal (ex: notas, faltas)...">
       </div>
     </div>
     <div class="top-right">
@@ -39,10 +37,7 @@
       <a href="contato.html" class="sub-link" data-page="contato">Contato</a>
       <a href="#" class="sub-link">Links</a>
     </div>
-    <div class="senai-logo">
-      <span class="fiep-text">Sistema Fiep</span>
-      <span class="senai-text">SENAI</span>
-    </div>
+    <div class="senai-logo"><span class="fiep-text">Sistema Fiep</span><span class="senai-text">SENAI</span></div>
   </nav>
 
   <!-- Main Content Container -->
@@ -78,8 +73,7 @@
 
           <h3>ATIVIDADES 2</h3>
           <p class="card-subtitle">Atividades realizadas</p>
-          <ul id="todo-list-completed" class="todo-list completed-list">
-          </ul>
+          <ul id="todo-list-completed" class="todo-list completed-list"></ul>
         </div>
 
         <div class="card">
@@ -101,9 +95,17 @@
       </div>
     </div>
   </main>
-  <footer class="site-footer">
-    <p>© Portal Educacional</p>
-    <p>2D e 3D Equipe 1</p>
+
+    <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <span class="footer-title"><i class="fas fa-graduation-cap"></i> Portal Educacional</span>
+        <span class="footer-copy">&copy; Portal Educacional. Todos os direitos reservados.</span>
+      </div>
+      <div class="footer-team">
+        <span class="team-badge"><i class="fas fa-users"></i> 2D e 3D &bull; Equipe 1</span>
+      </div>
+    </div>
   </footer>
   <script src="script.js"></script>
 </body>

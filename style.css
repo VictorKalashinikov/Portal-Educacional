@@ -267,12 +267,129 @@ body {
 .submit-btn:hover { background-color: var(--blue-primary); }
 .feedback-msg { margin-top: 15px; font-weight: bold; color: #2e7d32; }
 
+
+/* Estilos para a busca dinâmica */
+.search-results-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-top: 6px;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.search-result-item {
+  display: block;
+  padding: 10px 14px;
+  color: var(--navy-dark);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #eee;
+  transition: background-color 0.2s;
+}
+
+.search-result-item:hover {
+  background-color: var(--bg-light-blue);
+}
+
+.search-result-item i {
+  margin-right: 8px;
+  color: var(--blue-primary);
+}
+
+.search-no-result {
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  color: #777;
+  text-align: center;
+}
+
+/* Rodapé Moderno e Elegante */
 .site-footer {
-    background-color: var(--navy-dark);
-    color: white;
+  background: linear-gradient(135deg, var(--navy-dark) 0%, #2a2c42 100%);
+  color: #e2e8f0;
+  padding: 24px 0;
+  margin-top: auto;
+  border-top: 3px solid var(--blue-primary);
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.footer-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.footer-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer-title i {
+  color: #64b5f6;
+}
+
+.footer-copy {
+  font-size: 0.85rem;
+  color: #a0aec0;
+}
+
+.footer-team {
+  display: flex;
+  align-items: center;
+}
+
+.team-badge {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.team-badge i {
+  color: #64b5f6;
+}
+
+.team-badge:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #64b5f6;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 600px) {
+  .footer-container {
+    flex-direction: column;
     text-align: center;
-    padding: 16px 20px;
-    margin-top: auto;
-    font-size: 0.95rem;
-    line-height: 1.4;
   }
+  .footer-brand {
+    align-items: center;
+  }
+}
