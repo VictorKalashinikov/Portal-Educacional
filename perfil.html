@@ -7,6 +7,8 @@
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Supabase JS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body data-page="perfil">
   <!-- Top Navigation Bar -->
@@ -58,13 +60,23 @@
       <span class="senai-text">SENAI</span>
     </div>
   </nav>
+
   <!-- Main Content Container -->
   <main class="main-container">
     <div class="page-content">
       <div class="profile-card">
         <div class="profile-header">
-          <i class="fas fa-user-circle profile-avatar-large"></i>
-          <h2>Helena Silva</h2>
+          <!-- Foto do Usuário com opção de alteração -->
+          <div class="avatar-upload-wrapper">
+            <img id="avatar-img" src="https://via.placeholder.com/120?text=Foto" alt="Foto de Perfil" class="profile-avatar-custom">
+            <label for="avatar-input" class="avatar-upload-btn" title="Alterar Foto de Perfil">
+              <i class="fas fa-camera"></i>
+            </label>
+            <input type="file" id="avatar-input" accept="image/*" style="display: none;">
+          </div>
+          <p id="upload-status" class="upload-status-text"></p>
+
+          <h2 id="profile-name">Helena Silva</h2>
           <span class="profile-role">Aluna - Ensino Médio</span>
         </div>
 
@@ -83,7 +95,7 @@
             <i class="fas fa-envelope"></i>
             <div>
               <strong>E-mail:</strong>
-              <p>helena.silva@aluno.senai.br</p>
+              <p id="profile-email">helena.silva@aluno.senai.br</p>
             </div>
           </div>
 
@@ -112,6 +124,7 @@
       </div>
     </div>
   </main>
+
   <!-- Footer -->
   <footer class="site-footer">
     <div class="footer-container">

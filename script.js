@@ -1,6 +1,19 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
 
-  // 1. CARREGAR PREFERÊNCIAS SALVAS DE ACESSIBILIDADE (Modo Escuro e Fonte)
+  // =========================================================================
+  // CONFIGURAÇÃO DO SUPABASE
+  // Credenciais integradas do projeto
+  // =========================================================================
+  const SUPABASE_URL = 'https://sohowtrsgxmpgsinrjiv.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_rRplNye0QeN4tvrt5iA6GQ_7hz1bRX1';
+  
+  // Inicialização do cliente Supabase (usando a CDN oficial)
+  let supabase = null;
+  if (window.supabase) {
+    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  }
+
+  // 1. CARREGAR PREFERÊNCIAS SALVAS DE ACESSIBILIDADE
   const savedTheme = localStorage.getItem('theme');
   const savedFontSize = localStorage.getItem('fontSize');
 
@@ -23,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // 3. BARRA DE PESQUISA DO TOP-NAV (Busca Geral e Filtragem em Tabelas)
+  // 3. BARRA DE PESQUISA DO TOP-NAV
   const searchInput = document.querySelector('.search-bar input');
   if (searchInput) {
     const searchBar = document.querySelector('.search-bar');
@@ -33,21 +46,20 @@ document.addEventListener('DOMContentLoaded', () => {
     searchBar.appendChild(resultsDropdown);
 
     const pageRoutes = [
-      { name: 'Página Inicial / Home', url: 'index.html', keywords: ['home', 'inicio', 'atividades', 'boletim', 'eventos', 'tarefas', 'comunicados'] },
-      { name: 'Faltas e Frequência', url: 'faltas.html', keywords: ['faltas', 'frequencia', 'resumo de faltas', 'ausencias', 'presenca'] },
-      { name: 'Quadro de Horários', url: 'horarios.html', keywords: ['horarios', 'quadro de horarios', 'aulas', 'semanal', 'disciplinas', 'd.s', 'ingles'] },
-      { name: 'Notas e Boletim', url: 'notas.html', keywords: ['notas', 'boletim', 'trimestre', 'ensino medio', 'matematica', 'historia', 'ingles'] },
-      { name: 'Acesso / Login e Cadastro', url: 'login.html', keywords: ['login', 'entrar', 'cadastro', 'senha', 'autenticacao', 'conta'] },
-      { name: 'Contato e Secretaria', url: 'contato.html', keywords: ['contato', 'secretaria', 'fale conosco', 'suporte', 'duvidas', 'mensagens'] },
-      { name: 'Meu Perfil', url: 'perfil.html', keywords: ['perfil', 'usuario', 'matricula', 'dados', 'aluno'] },
-      { name: 'Configurações', url: 'configuracoes.html', keywords: ['configuracoes', 'tema', 'modo escuro', 'fonte', 'acessibilidade', 'notificacoes'] }
+      { name: 'Página Inicial / Home', url: 'index.html', keywords: ['home', 'inicio', 'atividades', 'boletim', 'eventos', 'tarefas'] },
+      { name: 'Faltas e Frequência', url: 'faltas.html', keywords: ['faltas', 'frequencia', 'resumo de faltas', 'ausencias'] },
+      { name: 'Quadro de Horários', url: 'horarios.html', keywords: ['horarios', 'quadro de horarios', 'aulas', 'semanal'] },
+      { name: 'Notas e Boletim', url: 'notas.html', keywords: ['notas', 'boletim', 'trimestre'] },
+      { name: 'Acesso / Login e Cadastro', url: 'login.html', keywords: ['login', 'entrar', 'cadastro', 'senha', 'autenticacao'] },
+      { name: 'Contato e Secretaria', url: 'contato.html', keywords: ['contato', 'secretaria', 'suporte'] },
+      { name: 'Meu Perfil', url: 'perfil.html', keywords: ['perfil', 'usuario', 'matricula', 'foto', 'avatar'] },
+      { name: 'Configurações', url: 'configuracoes.html', keywords: ['configuracoes', 'tema', 'modo escuro', 'fonte'] }
     ];
 
     searchInput.addEventListener('input', (e) => {
       const term = e.target.value.toLowerCase().trim();
       resultsDropdown.innerHTML = '';
 
-      // Filtrar linhas da tabela (se houver tabela na página)
       const tableRows = document.querySelectorAll('.data-table tbody tr');
       if (tableRows.length > 0) {
         tableRows.forEach(row => {
@@ -56,7 +68,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
 
-      // Sugestões de navegação
       if (term.length > 0) {
         const matches = pageRoutes.filter(route => 
           route.name.toLowerCase().includes(term) || 
@@ -81,22 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    searchInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        const term = searchInput.value.toLowerCase().trim();
-        if (!term) return;
-
-        const match = pageRoutes.find(route => 
-          route.name.toLowerCase().includes(term) || 
-          route.keywords.some(kw => kw.includes(term))
-        );
-
-        if (match) {
-          window.location.href = match.url;
-        }
-      }
-    });
-
     document.addEventListener('click', (e) => {
       if (!searchBar.contains(e.target)) {
         resultsDropdown.style.display = 'none';
@@ -104,15 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 4. BOTÃO DE IMPRESSÃO
-  const printBtn = document.getElementById('print-btn');
-  if (printBtn) {
-    printBtn.addEventListener('click', () => {
-      window.print();
-    });
-  }
-
-  // 5. MENU DROPDOWN DO PERFIL NO TOP-NAV
+  // 4. MENU DROPDOWN DO PERFIL E LOGOUT
   const userProfileBtn = document.getElementById('user-profile-btn');
   const userDropdownMenu = document.getElementById('user-dropdown-menu');
 
@@ -129,131 +116,69 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 6. BOTÃO DE SAIR (LOGOUT DROPDOWN E PÁGINA DE PERFIL)
-  const logoutBtn = document.getElementById('logout-btn');
-  const profileLogoutBtn = document.getElementById('logout-btn-profile');
-
-  function realizarLogout() {
+  async function realizarLogout() {
     const confirmLogout = confirm('Tem certeza que deseja sair do perfil?');
     if (confirmLogout) {
+      if (supabase) {
+        await supabase.auth.signOut();
+      }
       sessionStorage.removeItem('portalSenai_sessao');
       window.location.href = 'index.html';
     }
   }
 
-  if (logoutBtn) {
-    logoutBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      realizarLogout();
-    });
-  }
+  const logoutBtn = document.getElementById('logout-btn');
+  const profileLogoutBtn = document.getElementById('logout-btn-profile');
 
-  if (profileLogoutBtn) {
-    profileLogoutBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      realizarLogout();
-    });
-  }
+  if (logoutBtn) logoutBtn.addEventListener('click', (e) => { e.preventDefault(); realizarLogout(); });
+  if (profileLogoutBtn) profileLogoutBtn.addEventListener('click', (e) => { e.preventDefault(); realizarLogout(); });
 
-  // 7. FUNCIONALIDADES DA PÁGINA DE CONFIGURAÇÕES (MODO ESCURO E TAMANHO DA FONTE)
-  const themeToggle = document.getElementById('theme-toggle');
-  if (themeToggle) {
-    themeToggle.checked = document.body.classList.contains('dark-mode');
+  // 5. ATUALIZAÇÃO DA SESSÃO E DADOS NO TOPO DE TODAS AS PÁGINAS
+  async function verificarSessaoGlobal() {
+    const topUserDisplay = document.getElementById('top-user-display');
+    const topAvatar = document.querySelector('.top-right .user-avatar');
 
-    themeToggle.addEventListener('change', () => {
-      if (themeToggle.checked) {
-        document.body.classList.add('dark-mode');
-        localStorage.setItem('theme', 'dark');
-      } else {
-        document.body.classList.remove('dark-mode');
-        localStorage.setItem('theme', 'light');
+    if (supabase) {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        const user = session.user;
+        const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+        
+        const nomeExibir = profile?.nome_completo || user.user_metadata?.full_name || user.email.split('@')[0];
+        if (topUserDisplay) topUserDisplay.textContent = nomeExibir;
+
+        if (profile?.avatar_url && topAvatar) {
+          const img = document.createElement('img');
+          img.src = profile.avatar_url;
+          img.className = 'user-avatar-img';
+          topAvatar.replaceWith(img);
+        }
+        return { user, profile };
       }
-    });
-  }
-
-  const fontSizeSelect = document.getElementById('font-size-select');
-  if (fontSizeSelect) {
-    if (savedFontSize) {
-      fontSizeSelect.value = savedFontSize;
     }
-
-    fontSizeSelect.addEventListener('change', (e) => {
-      const size = e.target.value;
-      document.documentElement.classList.remove('font-large', 'font-xlarge');
-      
-      if (size !== 'normal') {
-        document.documentElement.classList.add(`font-${size}`);
-      }
-      localStorage.setItem('fontSize', size);
-    });
+    return null;
   }
 
-  // 8. FORMULÁRIO DE CONTATO
-  const contactForm = document.getElementById('contact-form');
-  if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const feedback = document.getElementById('form-feedback');
-      if (feedback) {
-        feedback.textContent = 'Mensagem enviada com sucesso! Em breve entraremos em contato.';
-      }
-      contactForm.reset();
-    });
-  }
+  const sessaoAtiva = await verificarSessaoGlobal();
 
-  // 9. FUNÇÕES DE LOGIN E CADASTRO (LOCAL STORAGE)
-  function obterUsuarios() {
-    try {
-      return JSON.parse(localStorage.getItem('portalSenai_usuarios')) || [];
-    } catch (e) {
-      return [];
-    }
-  }
-
-  function salvarUsuarios(lista) {
-    localStorage.setItem('portalSenai_usuarios', JSON.stringify(lista));
-  }
-
-  function obterSessao() {
-    try {
-      return JSON.parse(sessionStorage.getItem('portalSenai_sessao'));
-    } catch (e) {
-      return null;
-    }
-  }
-
-  // Atualizar nome do usuário ativo no topo da página
-  const topUserDisplay = document.getElementById('top-user-display');
-  const sessaoAtiva = obterSessao();
-  if (sessaoAtiva && topUserDisplay) {
-    topUserDisplay.textContent = sessaoAtiva.nome;
-  }
-
-  // Elementos do Login e Cadastro
-  const tabLogin = document.getElementById('tab-login');
-  const tabCadastro = document.getElementById('tab-cadastro');
+  // 6. LÓGICA DA PÁGINA DE LOGIN E CADASTRO (login.html)
   const formLogin = document.getElementById('form-login');
   const formCadastro = document.getElementById('form-cadastro');
-  const loggedPanel = document.getElementById('logged-panel');
+  const tabLogin = document.getElementById('tab-login');
+  const tabCadastro = document.getElementById('tab-cadastro');
   const msgLogin = document.getElementById('msg-login');
   const msgCadastro = document.getElementById('msg-cadastro');
-  const btnLogoutPanel = document.getElementById('btn-logout');
 
-  if (tabLogin && tabCadastro && formLogin && formCadastro) {
-
-    function exibirFeedback(elemento, texto, tipo) {
-      if (!elemento) return;
-      elemento.textContent = texto;
-      elemento.className = 'auth-feedback ' + tipo;
-    }
-
-    function limparFeedbacks() {
-      if (msgLogin) msgLogin.textContent = '';
-      if (msgCadastro) msgCadastro.textContent = '';
+  if (formLogin && formCadastro) {
+    function exibirFeedback(el, msg, tipo) {
+      if (!el) return;
+      el.textContent = msg;
+      el.className = 'auth-feedback ' + tipo;
     }
 
     function alternarAbas(aba) {
-      limparFeedbacks();
+      if (msgLogin) msgLogin.textContent = '';
+      if (msgCadastro) msgCadastro.textContent = '';
       if (aba === 'login') {
         tabLogin.classList.add('active');
         tabCadastro.classList.remove('active');
@@ -267,215 +192,242 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    tabLogin.addEventListener('click', () => alternarAbas('login'));
-    tabCadastro.addEventListener('click', () => alternarAbas('cadastro'));
+    if (tabLogin) tabLogin.addEventListener('click', () => alternarAbas('login'));
+    if (tabCadastro) tabCadastro.addEventListener('click', () => alternarAbas('cadastro'));
 
-    // Mostrar/Ocultar Senha
+    // Alternar visualização da senha
     document.querySelectorAll('.btn-toggle-eye').forEach(btn => {
       btn.addEventListener('click', () => {
         const targetId = btn.getAttribute('data-target');
         const input = document.getElementById(targetId);
         const icon = btn.querySelector('i');
-
         if (input) {
           const mostrar = input.type === 'password';
           input.type = mostrar ? 'text' : 'password';
-          if (icon) {
-            icon.className = mostrar ? 'fas fa-eye-slash' : 'fas fa-eye';
-          }
+          if (icon) icon.className = mostrar ? 'fas fa-eye-slash' : 'fas fa-eye';
         }
       });
     });
 
-    // Cadastro de Usuário
-    formCadastro.addEventListener('submit', (e) => {
+    // Validação em Tempo Real dos Requisitos da Senha
+    const cadSenhaInput = document.getElementById('cad-senha');
+    if (cadSenhaInput) {
+      cadSenhaInput.addEventListener('input', () => {
+        const val = cadSenhaInput.value;
+        const reqMinMax = document.getElementById('req-minmax');
+        const reqUpper = document.getElementById('req-upper');
+        const reqLower = document.getElementById('req-lower');
+        const reqNumber = document.getElementById('req-number');
+        const reqSpecial = document.getElementById('req-special');
+
+        if (reqMinMax) reqMinMax.className = (val.length >= 8 && val.length <= 30) ? 'valid' : '';
+        if (reqUpper) reqUpper.className = /[A-Z]/.test(val) ? 'valid' : '';
+        if (reqLower) reqLower.className = /[a-z]/.test(val) ? 'valid' : '';
+        if (reqNumber) reqNumber.className = /[0-9]/.test(val) ? 'valid' : '';
+        if (reqSpecial) reqSpecial.className = /[!@#$%^&*(),.?":{}|<>_\-\\/+=~`\[\]]/.test(val) ? 'valid' : '';
+      });
+    }
+
+    // Função para validar requisitos de senha antes de cadastrar
+    function validarSenhaRequisitos(senha) {
+      if (senha.length < 8 || senha.length > 30) {
+        return 'A senha deve ter entre 8 e 30 caracteres.';
+      }
+      if (!/[A-Z]/.test(senha)) {
+        return 'A senha deve conter pelo menos uma letra maiúscula.';
+      }
+      if (!/[a-z]/.test(senha)) {
+        return 'A senha deve conter pelo menos uma letra minúscula.';
+      }
+      if (!/[0-9]/.test(senha)) {
+        return 'A senha deve conter pelo menos um número.';
+      }
+      if (!/[!@#$%^&*(),.?":{}|<>_\-\\/+=~`\[\]]/.test(senha)) {
+        return 'A senha deve conter pelo menos um caractere especial (ex: @, #, $, !).';
+      }
+      return null;
+    }
+
+    // Submissão do Formulário de Cadastro (Supabase Auth + Tabela Profiles)
+    formCadastro.addEventListener('submit', async (e) => {
       e.preventDefault();
       const nome = document.getElementById('cad-nome').value.trim();
-      const usuario = document.getElementById('cad-usuario').value.trim();
       const email = document.getElementById('cad-email').value.trim();
       const senha = document.getElementById('cad-senha').value;
       const confirma = document.getElementById('cad-confirma').value;
 
-      if (!nome || !usuario || !email || !senha || !confirma) {
+      if (!nome || !email || !senha || !confirma) {
         exibirFeedback(msgCadastro, 'Preencha todos os campos.', 'erro');
         return;
       }
 
-      const formatoEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!formatoEmail.test(email)) {
-        exibirFeedback(msgCadastro, 'Digite um e-mail válido.', 'erro');
-        return;
-      }
-
-      if (senha.length < 6) {
-        exibirFeedback(msgCadastro, 'A senha precisa ter pelo menos 6 caracteres.', 'erro');
+      // Validação das regras da senha
+      const erroSenha = validarSenhaRequisitos(senha);
+      if (erroSenha) {
+        exibirFeedback(msgCadastro, erroSenha, 'erro');
         return;
       }
 
       if (senha !== confirma) {
-        exibirFeedback(msgCadastro, 'As senhas digitadas não coincidem.', 'erro');
+        exibirFeedback(msgCadastro, 'As senhas não coincidem.', 'erro');
         return;
       }
 
-      const usuarios = obterUsuarios();
-      const duplicado = usuarios.some(u =>
-        u.usuario.toLowerCase() === usuario.toLowerCase() ||
-        u.email.toLowerCase() === email.toLowerCase()
-      );
+      if (supabase) {
+        exibirFeedback(msgCadastro, 'Criando conta no Supabase...', 'sucesso');
+        const { data, error } = await supabase.auth.signUp({
+          email: email,
+          password: senha,
+          options: { data: { full_name: nome } }
+        });
 
-      if (duplicado) {
-        exibirFeedback(msgCadastro, 'Este usuário ou e-mail já está cadastrado.', 'erro');
-        return;
+        if (error) {
+          exibirFeedback(msgCadastro, error.message, 'erro');
+          return;
+        }
+
+        if (data.user) {
+          // Inserir registro correspondente na tabela profiles
+          await supabase.from('profiles').upsert({
+            id: data.user.id,
+            nome_completo: nome,
+            email: email,
+            updated_at: new Date()
+          });
+
+          exibirFeedback(msgCadastro, 'Cadastro realizado! Redirecionando...', 'sucesso');
+          setTimeout(() => window.location.href = 'perfil.html', 1500);
+        }
+      } else {
+        exibirFeedback(msgCadastro, 'Supabase não conectado. Configure as chaves no script.js', 'erro');
       }
-
-      const novoUsuario = {
-        nome: nome,
-        usuario: usuario,
-        email: email,
-        senha: senha,
-        tentativasFalhas: 0,
-        bloqueadoAte: null
-      };
-
-      usuarios.push(novoUsuario);
-      salvarUsuarios(usuarios);
-
-      exibirFeedback(msgCadastro, 'Cadastro realizado com sucesso!', 'sucesso');
-      formCadastro.reset();
-
-      document.getElementById('login-identificacao').value = usuario;
-      setTimeout(() => alternarAbas('login'), 1200);
     });
 
-    // Login de Usuário
-    formLogin.addEventListener('submit', (e) => {
+    // Submissão do Formulário de Login (Supabase Auth)
+    formLogin.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const identificacao = document.getElementById('login-identificacao').value.trim().toLowerCase();
+      const email = document.getElementById('login-identificacao').value.trim();
       const senha = document.getElementById('login-senha').value;
-      const usuarios = obterUsuarios();
 
-      const index = usuarios.findIndex(u =>
-        u.usuario.toLowerCase() === identificacao ||
-        u.email.toLowerCase() === identificacao
-      );
-
-      if (index === -1) {
-        exibirFeedback(msgLogin, 'Usuário, e-mail ou senha incorretos.', 'erro');
+      if (!email || !senha) {
+        exibirFeedback(msgLogin, 'Preencha o e-mail e a senha.', 'erro');
         return;
       }
 
-      const conta = usuarios[index];
-      const agora = Date.now();
+      if (supabase) {
+        exibirFeedback(msgLogin, 'Autenticando...', 'sucesso');
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: email,
+          password: senha
+        });
 
-      if (conta.bloqueadoAte && conta.bloqueadoAte > agora) {
-        const minutosRestantes = Math.ceil((conta.bloqueadoAte - agora) / (1000 * 60));
-        exibirFeedback(msgLogin, `Conta bloqueada. Tente novamente em ${minutosRestantes} minuto(s).`, 'erro');
-        return;
-      }
-
-      if (conta.senha !== senha) {
-        conta.tentativasFalhas = (conta.tentativasFalhas || 0) + 1;
-        if (conta.tentativasFalhas >= 5) {
-          conta.bloqueadoAte = agora + (60 * 60 * 1000);
-          conta.tentativasFalhas = 0;
-          salvarUsuarios(usuarios);
-          exibirFeedback(msgLogin, 'Você errou a senha 5 vezes. A conta foi bloqueada por 1 hora.', 'erro');
-        } else {
-          salvarUsuarios(usuarios);
-          const restantes = 5 - conta.tentativasFalhas;
-          exibirFeedback(msgLogin, `Senha incorreta. Restam ${restantes} tentativa(s).`, 'erro');
+        if (error) {
+          exibirFeedback(msgLogin, 'E-mail ou senha incorretos.', 'erro');
+          return;
         }
-        return;
+
+        if (data.session) {
+          exibirFeedback(msgLogin, 'Login realizado com sucesso!', 'sucesso');
+          setTimeout(() => window.location.href = 'perfil.html', 1000);
+        }
+      } else {
+        exibirFeedback(msgLogin, 'Supabase não conectado.', 'erro');
       }
-
-      conta.tentativasFalhas = 0;
-      conta.bloqueadoAte = null;
-      salvarUsuarios(usuarios);
-
-      const sessao = { nome: conta.nome, usuario: conta.usuario };
-      sessionStorage.setItem('portalSenai_sessao', JSON.stringify(sessao));
-
-      if (topUserDisplay) {
-        topUserDisplay.textContent = conta.nome;
-      }
-
-      verificarSessaoEAtualizarTela();
-      formLogin.reset();
     });
+  }
 
-    if (btnLogoutPanel) {
-      btnLogoutPanel.addEventListener('click', () => {
-        sessionStorage.removeItem('portalSenai_sessao');
-        if (topUserDisplay) {
-          topUserDisplay.textContent = 'Helena';
+  // 7. LÓGICA DA PÁGINA DE PERFIL E UPLOAD DE FOTO (perfil.html)
+  if (currentPage === 'perfil') {
+    const profileName = document.getElementById('profile-name');
+    const profileEmail = document.getElementById('profile-email');
+    const avatarImg = document.getElementById('avatar-img');
+    const avatarInput = document.getElementById('avatar-input');
+    const uploadStatus = document.getElementById('upload-status');
+
+    if (sessaoAtiva && sessaoAtiva.user) {
+      const user = sessaoAtiva.user;
+      const profile = sessaoAtiva.profile;
+
+      if (profileName) profileName.textContent = profile?.nome_completo || user.user_metadata?.full_name || 'Aluno SENAI';
+      if (profileEmail) profileEmail.textContent = user.email;
+      if (profile?.avatar_url && avatarImg) {
+        avatarImg.src = profile.avatar_url;
+      }
+    }
+
+    // Upload de Imagem de Perfil para o Supabase Storage
+    if (avatarInput && supabase) {
+      avatarInput.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+          alert('Você precisa estar logado para alterar a foto!');
+          return;
         }
-        verificarSessaoEAtualizarTela();
+
+        const userId = session.user.id;
+        const fileExt = file.name.split('.').pop();
+        const filePath = `${userId}/avatar.${fileExt}`;
+
+        if (uploadStatus) uploadStatus.textContent = 'Enviando foto...';
+
+        // 1. Upload para o bucket 'avatars'
+        const { error: uploadError } = await supabase.storage
+          .from('avatars')
+          .upload(filePath, file, { upsert: true });
+
+        if (uploadError) {
+          if (uploadStatus) uploadStatus.textContent = 'Erro ao enviar foto.';
+          alert('Erro no upload: ' + uploadError.message);
+          return;
+        }
+
+        // 2. Obter URL pública
+        const { data: publicUrlData } = supabase.storage
+          .from('avatars')
+          .getPublicUrl(filePath);
+
+        const publicUrl = publicUrlData.publicUrl + '?t=' + new Date().getTime();
+
+        // 3. Atualizar tabela profiles
+        await supabase.from('profiles').upsert({
+          id: userId,
+          avatar_url: publicUrl,
+          updated_at: new Date()
+        });
+
+        if (avatarImg) avatarImg.src = publicUrl;
+        if (uploadStatus) uploadStatus.textContent = 'Foto atualizada com sucesso!';
+        setTimeout(() => { if (uploadStatus) uploadStatus.textContent = ''; }, 3000);
       });
     }
+  }
 
-    function verificarSessaoEAtualizarTela() {
-      const sessao = obterSessao();
-      if (sessao) {
-        formLogin.classList.add('is-hidden');
-        formCadastro.classList.add('is-hidden');
-        tabLogin.classList.add('is-hidden');
-        tabCadastro.classList.add('is-hidden');
-
-        if (loggedPanel) {
-          loggedPanel.classList.remove('is-hidden');
-        }
-
-        const titulo = document.getElementById('logged-title');
-        const descricao = document.getElementById('logged-desc');
-        if (titulo) titulo.textContent = `Bem-vindo(a), ${sessao.nome}!`;
-        if (descricao) descricao.textContent = `Conectado como @${sessao.usuario}`;
-
+  // 8. CONFIGURAÇÕES (Modo escuro / fonte)
+  const themeToggle = document.getElementById('theme-toggle');
+  if (themeToggle) {
+    themeToggle.checked = document.body.classList.contains('dark-mode');
+    themeToggle.addEventListener('change', () => {
+      if (themeToggle.checked) {
+        document.body.classList.add('dark-mode');
+        localStorage.setItem('theme', 'dark');
       } else {
-        tabLogin.classList.remove('is-hidden');
-        tabCadastro.classList.remove('is-hidden');
-        if (loggedPanel) {
-          loggedPanel.classList.add('is-hidden');
-        }
-        alternarAbas('login');
+        document.body.classList.remove('dark-mode');
+        localStorage.setItem('theme', 'light');
       }
-    }
+    });
+  }
 
-    verificarSessaoEAtualizarTela();
+  const fontSizeSelect = document.getElementById('font-size-select');
+  if (fontSizeSelect) {
+    if (savedFontSize) fontSizeSelect.value = savedFontSize;
+    fontSizeSelect.addEventListener('change', (e) => {
+      const size = e.target.value;
+      document.documentElement.classList.remove('font-large', 'font-xlarge');
+      if (size !== 'normal') document.documentElement.classList.add(`font-${size}`);
+      localStorage.setItem('fontSize', size);
+    });
   }
 });
-
-// Funções globais da To-Do List (Página Inicial)
-function toggleTask(checkbox) {
-  const listItem = checkbox.closest('li');
-  const pendingList = document.getElementById('todo-list-pending');
-  const completedList = document.getElementById('todo-list-completed');
-
-  if (checkbox.checked) {
-    completedList.appendChild(listItem);
-  } else {
-    pendingList.appendChild(listItem);
-  }
-}
-
-function addTask() {
-  const input = document.getElementById('new-task-input');
-  if (!input) return;
-  const taskName = input.value.trim();
-  if (!taskName) return;
-
-  const pendingList = document.getElementById('todo-list-pending');
-  const li = document.createElement('li');
-
-  li.innerHTML = `
-    <label><input type="checkbox" onchange="toggleTask(this)"> ${taskName}</label>
-    <i class="fas fa-trash delete-icon" onclick="deleteTask(this)"></i>
-  `;
-
-  pendingList.appendChild(li);
-  input.value = '';
-}
-
-function deleteTask(element) {
-  const listItem = element.closest('li');
-  listItem.remove();
-}

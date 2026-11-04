@@ -7,6 +7,8 @@
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Supabase JS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body data-page="login">
   <!-- Top Navigation Bar -->
@@ -131,11 +133,19 @@
             <label for="cad-senha">Senha</label>
             <div class="input-wrapper">
               <i class="fas fa-key input-icon"></i>
-              <input type="password" id="cad-senha" placeholder="Crie uma senha" required>
+              <input type="password" id="cad-senha" placeholder="Crie uma senha forte" required>
               <button type="button" class="btn-toggle-eye" data-target="cad-senha" title="Ver ou ocultar senha">
                 <i class="fas fa-eye"></i>
               </button>
             </div>
+            <!-- Requisitos visuais de Senha -->
+            <ul class="password-requirements">
+              <li id="req-minmax"><i class="fas fa-check-circle"></i> Entre 8 e 30 caracteres</li>
+              <li id="req-upper"><i class="fas fa-check-circle"></i> Pelo menos 1 letra maiúscula</li>
+              <li id="req-lower"><i class="fas fa-check-circle"></i> Pelo menos 1 letra minúscula</li>
+              <li id="req-number"><i class="fas fa-check-circle"></i> Pelo menos 1 número</li>
+              <li id="req-special"><i class="fas fa-check-circle"></i> Pelo menos 1 caractere especial (@, #, $, etc.)</li>
+            </ul>
           </div>
 
           <div class="form-group">
