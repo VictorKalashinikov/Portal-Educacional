@@ -1,9 +1,19 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-  // IDENTIFICA A PÁGINA ATUAL
-  const currentPage = document.body.dataset.page;
+  // 1. CARREGAR PREFERÊNCIAS SALVAS DE ACESSIBILIDADE (Modo Escuro e Fonte)
+  const savedTheme = localStorage.getItem('theme');
+  const savedFontSize = localStorage.getItem('fontSize');
 
-  // DESTACA O LINK ATIVO
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark-mode');
+  }
+
+  if (savedFontSize && savedFontSize !== 'normal') {
+    document.documentElement.classList.add(`font-${savedFontSize}`);
+  }
+
+  // 2. IDENTIFICAR A PÁGINA ATUAL E DESTACAR LINK DA NAVEGAÇÃO
+  const currentPage = document.body.dataset.page;
   const navButtons = document.querySelectorAll('.nav-btn, .sub-link');
   navButtons.forEach(btn => {
     if (btn.dataset.page === currentPage) {
@@ -13,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // LÓGICA DA BARRA DE PESQUISA DO TOP-NAV (Busca Geral e em Tabelas)
+  // 3. BARRA DE PESQUISA DO TOP-NAV (Busca Geral e Filtragem em Tabelas)
   const searchInput = document.querySelector('.search-bar input');
   if (searchInput) {
     const searchBar = document.querySelector('.search-bar');
@@ -28,7 +38,9 @@ document.addEventListener('DOMContentLoaded', () => {
       { name: 'Quadro de Horários', url: 'horarios.html', keywords: ['horarios', 'quadro de horarios', 'aulas', 'semanal', 'disciplinas', 'd.s', 'ingles'] },
       { name: 'Notas e Boletim', url: 'notas.html', keywords: ['notas', 'boletim', 'trimestre', 'ensino medio', 'matematica', 'historia', 'ingles'] },
       { name: 'Acesso / Login e Cadastro', url: 'login.html', keywords: ['login', 'entrar', 'cadastro', 'senha', 'autenticacao', 'conta'] },
-      { name: 'Contato e Secretaria', url: 'contato.html', keywords: ['contato', 'secretaria', 'fale conosco', 'suporte', 'duvidas', 'mensagens'] }
+      { name: 'Contato e Secretaria', url: 'contato.html', keywords: ['contato', 'secretaria', 'fale conosco', 'suporte', 'duvidas', 'mensagens'] },
+      { name: 'Meu Perfil', url: 'perfil.html', keywords: ['perfil', 'usuario', 'matricula', 'dados', 'aluno'] },
+      { name: 'Configurações', url: 'configuracoes.html', keywords: ['configuracoes', 'tema', 'modo escuro', 'fonte', 'acessibilidade', 'notificacoes'] }
     ];
 
     searchInput.addEventListener('input', (e) => {
@@ -92,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // IMPRESSÃO
+  // 4. BOTÃO DE IMPRESSÃO
   const printBtn = document.getElementById('print-btn');
   if (printBtn) {
     printBtn.addEventListener('click', () => {
@@ -100,7 +112,83 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // FORMULÁRIO DE CONTATO
+  // 5. MENU DROPDOWN DO PERFIL NO TOP-NAV
+  const userProfileBtn = document.getElementById('user-profile-btn');
+  const userDropdownMenu = document.getElementById('user-dropdown-menu');
+
+  if (userProfileBtn && userDropdownMenu) {
+    userProfileBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      userDropdownMenu.classList.toggle('show');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!userDropdownMenu.contains(e.target) && !userProfileBtn.contains(e.target)) {
+        userDropdownMenu.classList.remove('show');
+      }
+    });
+  }
+
+  // 6. BOTÃO DE SAIR (LOGOUT DROPDOWN E PÁGINA DE PERFIL)
+  const logoutBtn = document.getElementById('logout-btn');
+  const profileLogoutBtn = document.getElementById('logout-btn-profile');
+
+  function realizarLogout() {
+    const confirmLogout = confirm('Tem certeza que deseja sair do perfil?');
+    if (confirmLogout) {
+      sessionStorage.removeItem('portalSenai_sessao');
+      window.location.href = 'index.html';
+    }
+  }
+
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      realizarLogout();
+    });
+  }
+
+  if (profileLogoutBtn) {
+    profileLogoutBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      realizarLogout();
+    });
+  }
+
+  // 7. FUNCIONALIDADES DA PÁGINA DE CONFIGURAÇÕES (MODO ESCURO E TAMANHO DA FONTE)
+  const themeToggle = document.getElementById('theme-toggle');
+  if (themeToggle) {
+    themeToggle.checked = document.body.classList.contains('dark-mode');
+
+    themeToggle.addEventListener('change', () => {
+      if (themeToggle.checked) {
+        document.body.classList.add('dark-mode');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        document.body.classList.remove('dark-mode');
+        localStorage.setItem('theme', 'light');
+      }
+    });
+  }
+
+  const fontSizeSelect = document.getElementById('font-size-select');
+  if (fontSizeSelect) {
+    if (savedFontSize) {
+      fontSizeSelect.value = savedFontSize;
+    }
+
+    fontSizeSelect.addEventListener('change', (e) => {
+      const size = e.target.value;
+      document.documentElement.classList.remove('font-large', 'font-xlarge');
+      
+      if (size !== 'normal') {
+        document.documentElement.classList.add(`font-${size}`);
+      }
+      localStorage.setItem('fontSize', size);
+    });
+  }
+
+  // 8. FORMULÁRIO DE CONTATO
   const contactForm = document.getElementById('contact-form');
   if (contactForm) {
     contactForm.addEventListener('submit', (e) => {
@@ -113,20 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // TO-DO LIST (Página Inicial)
-  const taskInput = document.getElementById('new-task-input');
-  if (taskInput) {
-    taskInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        addTask();
-      }
-    });
-  }
-
-  // =========================================
-  // FUNÇÕES DE LOGIN E CADASTRO (LOCAL STORAGE)
-  // =========================================
-
+  // 9. FUNÇÕES DE LOGIN E CADASTRO (LOCAL STORAGE)
   function obterUsuarios() {
     try {
       return JSON.parse(localStorage.getItem('portalSenai_usuarios')) || [];
@@ -147,14 +222,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // ATUALIZA O NOME DO USUÁRIO NO TOPO DA PÁGINA
+  // Atualizar nome do usuário ativo no topo da página
   const topUserDisplay = document.getElementById('top-user-display');
   const sessaoAtiva = obterSessao();
   if (sessaoAtiva && topUserDisplay) {
     topUserDisplay.textContent = sessaoAtiva.nome;
   }
 
-  // ELEMENTOS DO LOGIN E CADASTRO
+  // Elementos do Login e Cadastro
   const tabLogin = document.getElementById('tab-login');
   const tabCadastro = document.getElementById('tab-cadastro');
   const formLogin = document.getElementById('form-login');
@@ -162,7 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const loggedPanel = document.getElementById('logged-panel');
   const msgLogin = document.getElementById('msg-login');
   const msgCadastro = document.getElementById('msg-cadastro');
-  const btnLogout = document.getElementById('btn-logout');
+  const btnLogoutPanel = document.getElementById('btn-logout');
 
   if (tabLogin && tabCadastro && formLogin && formCadastro) {
 
@@ -195,7 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
     tabLogin.addEventListener('click', () => alternarAbas('login'));
     tabCadastro.addEventListener('click', () => alternarAbas('cadastro'));
 
-    // MOSTRAR/OCULTAR SENHA
+    // Mostrar/Ocultar Senha
     document.querySelectorAll('.btn-toggle-eye').forEach(btn => {
       btn.addEventListener('click', () => {
         const targetId = btn.getAttribute('data-target');
@@ -212,7 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    // CADASTRO
+    // Cadastro de Usuário
     formCadastro.addEventListener('submit', (e) => {
       e.preventDefault();
       const nome = document.getElementById('cad-nome').value.trim();
@@ -272,7 +347,7 @@ document.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => alternarAbas('login'), 1200);
     });
 
-    // LOGIN
+    // Login de Usuário
     formLogin.addEventListener('submit', (e) => {
       e.preventDefault();
       const identificacao = document.getElementById('login-identificacao').value.trim().toLowerCase();
@@ -328,9 +403,8 @@ document.addEventListener('DOMContentLoaded', () => {
       formLogin.reset();
     });
 
-    // LOGOUT
-    if (btnLogout) {
-      btnLogout.addEventListener('click', () => {
+    if (btnLogoutPanel) {
+      btnLogoutPanel.addEventListener('click', () => {
         sessionStorage.removeItem('portalSenai_sessao');
         if (topUserDisplay) {
           topUserDisplay.textContent = 'Helena';
@@ -370,7 +444,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// Funções globais da To-Do List (Card 1)
+// Funções globais da To-Do List (Página Inicial)
 function toggleTask(checkbox) {
   const listItem = checkbox.closest('li');
   const pendingList = document.getElementById('todo-list-pending');
