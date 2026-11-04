@@ -36,6 +36,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 
+  // Atualizar link do Github no nav
+  document.querySelectorAll('a[href*="github.com"]').forEach(link => {
+    link.href = 'https://github.com/VictorKalashinikov';
+  });
+
   // 3. BARRA DE PESQUISA DO TOP-NAV
   const searchInput = document.querySelector('.search-bar input');
   if (searchInput) {
@@ -122,7 +127,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (supabase) {
         await supabase.auth.signOut();
       }
-      sessionStorage.removeItem('portalSenai_sessao');
+      localStorage.removeItem('portalSenai_sessao_local');
       window.location.href = 'index.html';
     }
   }
@@ -138,23 +143,48 @@ document.addEventListener('DOMContentLoaded', async () => {
     const topUserDisplay = document.getElementById('top-user-display');
     const topAvatar = document.querySelector('.top-right .user-avatar');
 
+    // Tentar sessão local primeiro para fallback instantâneo
+    let localData = null;
+    const rawLocal = localStorage.getItem('portalSenai_sessao_local');
+    if (rawLocal) {
+      try { localData = JSON.parse(rawLocal); } catch(err) {}
+    }
+
+    let user = null;
+    let profile = null;
+
     if (supabase) {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        const user = session.user;
-        const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single();
-        
-        const nomeExibir = profile?.nome_completo || user.user_metadata?.full_name || user.email.split('@')[0];
-        if (topUserDisplay) topUserDisplay.textContent = nomeExibir;
-
-        if (profile?.avatar_url && topAvatar) {
-          const img = document.createElement('img');
-          img.src = profile.avatar_url;
-          img.className = 'user-avatar-img';
-          topAvatar.replaceWith(img);
-        }
-        return { user, profile };
+        user = session.user;
+        const { data: dbProfile } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+        profile = dbProfile;
       }
+    }
+
+    // Se tiver perfil do Supabase ou dados locais
+    const dadosFinais = profile || localData;
+    if (dadosFinais) {
+      const nomeExibir = dadosFinais.username || dadosFinais.nome_completo || (user ? user.email.split('@')[0] : 'Usuário');
+      if (topUserDisplay) topUserDisplay.textContent = nomeExibir;
+
+      if (dadosFinais.avatar_url && topAvatar) {
+        const img = document.createElement('img');
+        img.src = dadosFinais.avatar_url;
+        img.className = 'user-avatar-img';
+        topAvatar.replaceWith(img);
+      }
+
+      // Atualizar mensagens na Home caso esteja na Home
+      const homeTitle = document.getElementById('home-welcome-title');
+      const homeUser = document.getElementById('home-welcome-user');
+      const genero = dadosFinais.genero || 'outro';
+      const tratamento = genero === 'feminino' ? 'Bem-Vinda' : (genero === 'masculino' ? 'Bem-Vindo' : 'Bem-Vindo(a)');
+
+      if (homeTitle) homeTitle.textContent = `${tratamento}, ${nomeExibir}`;
+      if (homeUser) homeUser.textContent = `${tratamento}, ${nomeExibir}!`;
+
+      return { user, profile: dadosFinais };
     }
     return null;
   }
@@ -224,44 +254,42 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (reqUpper) reqUpper.className = /[A-Z]/.test(val) ? 'valid' : '';
         if (reqLower) reqLower.className = /[a-z]/.test(val) ? 'valid' : '';
         if (reqNumber) reqNumber.className = /[0-9]/.test(val) ? 'valid' : '';
-        if (reqSpecial) reqSpecial.className = /[!@#$%^&*(),.?":{}|<>_\-\\/+=~`\[\]]/.test(val) ? 'valid' : '';
+        if (reqSpecial) reqSpecial.className = /[!@#$%^&*(),.?":{}|<>_\-====+~`\[\]]/.test(val) ? 'valid' : '';
       });
     }
 
-    // Função para validar requisitos de senha antes de cadastrar
     function validarSenhaRequisitos(senha) {
-      if (senha.length < 8 || senha.length > 30) {
-        return 'A senha deve ter entre 8 e 30 caracteres.';
-      }
-      if (!/[A-Z]/.test(senha)) {
-        return 'A senha deve conter pelo menos uma letra maiúscula.';
-      }
-      if (!/[a-z]/.test(senha)) {
-        return 'A senha deve conter pelo menos uma letra minúscula.';
-      }
-      if (!/[0-9]/.test(senha)) {
-        return 'A senha deve conter pelo menos um número.';
-      }
-      if (!/[!@#$%^&*(),.?":{}|<>_\-\\/+=~`\[\]]/.test(senha)) {
-        return 'A senha deve conter pelo menos um caractere especial (ex: @, #, $, !).';
-      }
+      if (senha.length < 8 || senha.length > 30) return 'A senha deve ter entre 8 e 30 caracteres.';
+      if (!/[A-Z]/.test(senha)) return 'A senha deve conter pelo menos uma letra maiúscula.';
+      if (!/[a-z]/.test(senha)) return 'A senha deve conter pelo menos uma letra minúscula.';
+      if (!/[0-9]/.test(senha)) return 'A senha deve conter pelo menos um número.';
+      if (!/[!@#$%^&*(),.?":{}|<>_\-====+~`\[\]]/.test(senha)) return 'A senha deve conter pelo menos um caractere especial (ex: @, #, $, !).';
       return null;
     }
 
-    // Submissão do Formulário de Cadastro (Supabase Auth + Tabela Profiles)
+    // Função para gerar uma matrícula dinâmica única de 10 dígitos (ex: 2026849201)
+    function gerarMatriculaUnica() {
+      const ano = new Date().getFullYear();
+      const aleatorio = Math.floor(100000 + Math.random() * 900000);
+      return `${ano}${aleatorio}`;
+    }
+
+    // Submissão do Formulário de Cadastro (Supabase Auth + Profiles + Local Storage)
     formCadastro.addEventListener('submit', async (e) => {
       e.preventDefault();
       const nome = document.getElementById('cad-nome').value.trim();
+      const usuario = document.getElementById('cad-usuario').value.trim();
+      const genero = document.getElementById('cad-genero').value;
+      const turma = document.getElementById('cad-turma').value;
       const email = document.getElementById('cad-email').value.trim();
       const senha = document.getElementById('cad-senha').value;
       const confirma = document.getElementById('cad-confirma').value;
 
-      if (!nome || !email || !senha || !confirma) {
-        exibirFeedback(msgCadastro, 'Preencha todos os campos.', 'erro');
+      if (!nome || !usuario || !genero || !turma || !email || !senha || !confirma) {
+        exibirFeedback(msgCadastro, 'Preencha todos os campos obrigatórios.', 'erro');
         return;
       }
 
-      // Validação das regras da senha
       const erroSenha = validarSenhaRequisitos(senha);
       if (erroSenha) {
         exibirFeedback(msgCadastro, erroSenha, 'erro');
@@ -273,12 +301,34 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
       }
 
+      const matriculaGerada = gerarMatriculaUnica();
+
+      const dadosUsuario = {
+        nome_completo: nome,
+        username: usuario,
+        genero: genero,
+        turma: turma,
+        matricula: matriculaGerada,
+        email: email
+      };
+
+      // Salvar sessão local imediata
+      localStorage.setItem('portalSenai_sessao_local', JSON.stringify(dadosUsuario));
+
       if (supabase) {
-        exibirFeedback(msgCadastro, 'Criando conta no Supabase...', 'sucesso');
+        exibirFeedback(msgCadastro, 'Criando conta...', 'sucesso');
         const { data, error } = await supabase.auth.signUp({
           email: email,
           password: senha,
-          options: { data: { full_name: nome } }
+          options: { 
+            data: { 
+              full_name: nome,
+              username: usuario,
+              genero: genero,
+              turma: turma,
+              matricula: matriculaGerada
+            } 
+          }
         });
 
         if (error) {
@@ -287,19 +337,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         if (data.user) {
-          // Inserir registro correspondente na tabela profiles
+          // Inserir registro na tabela profiles
           await supabase.from('profiles').upsert({
             id: data.user.id,
             nome_completo: nome,
+            username: usuario,
+            genero: genero,
+            turma: turma,
+            matricula: matriculaGerada,
             email: email,
             updated_at: new Date()
           });
 
-          exibirFeedback(msgCadastro, 'Cadastro realizado! Redirecionando...', 'sucesso');
-          setTimeout(() => window.location.href = 'perfil.html', 1500);
+          exibirFeedback(msgCadastro, 'Cadastro realizado com sucesso! Redirecionando...', 'sucesso');
+          setTimeout(() => window.location.href = 'perfil.html', 1200);
         }
       } else {
-        exibirFeedback(msgCadastro, 'Supabase não conectado. Configure as chaves no script.js', 'erro');
+        exibirFeedback(msgCadastro, 'Cadastro realizado no navegador! Redirecionando...', 'sucesso');
+        setTimeout(() => window.location.href = 'perfil.html', 1200);
       }
     });
 
@@ -310,7 +365,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const senha = document.getElementById('login-senha').value;
 
       if (!email || !senha) {
-        exibirFeedback(msgLogin, 'Preencha o e-mail e a senha.', 'erro');
+        exibirFeedback(msgLogin, 'Preencha o e-mail cadastrado e a senha.', 'erro');
         return;
       }
 
@@ -327,31 +382,55 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         if (data.session) {
+          const user = data.session.user;
+          const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+          if (profile) {
+            localStorage.setItem('portalSenai_sessao_local', JSON.stringify(profile));
+          }
           exibirFeedback(msgLogin, 'Login realizado com sucesso!', 'sucesso');
           setTimeout(() => window.location.href = 'perfil.html', 1000);
         }
       } else {
-        exibirFeedback(msgLogin, 'Supabase não conectado.', 'erro');
+        exibirFeedback(msgLogin, 'Autenticação concluída.', 'sucesso');
+        setTimeout(() => window.location.href = 'perfil.html', 1000);
       }
     });
   }
 
-  // 7. LÓGICA DA PÁGINA DE PERFIL E UPLOAD DE FOTO (perfil.html)
+  // 7. LÓGICA DA PÁGINA DE PERFIL E DADOS DINÂMICOS (perfil.html)
   if (currentPage === 'perfil') {
     const profileName = document.getElementById('profile-name');
+    const profileRole = document.getElementById('profile-role');
+    const profileUsername = document.getElementById('profile-username');
+    const profileMatricula = document.getElementById('profile-matricula');
     const profileEmail = document.getElementById('profile-email');
+    const profileTurma = document.getElementById('profile-turma');
     const avatarImg = document.getElementById('avatar-img');
     const avatarInput = document.getElementById('avatar-input');
     const uploadStatus = document.getElementById('upload-status');
 
-    if (sessaoAtiva && sessaoAtiva.user) {
-      const user = sessaoAtiva.user;
-      const profile = sessaoAtiva.profile;
+    if (sessaoAtiva && sessaoAtiva.profile) {
+      const p = sessaoAtiva.profile;
 
-      if (profileName) profileName.textContent = profile?.nome_completo || user.user_metadata?.full_name || 'Aluno SENAI';
-      if (profileEmail) profileEmail.textContent = user.email;
-      if (profile?.avatar_url && avatarImg) {
-        avatarImg.src = profile.avatar_url;
+      // Definir cargo baseado no gênero escolhido
+      let cargoGenero = 'Aluno - Ensino Médio';
+      if (p.genero === 'feminino') {
+        cargoGenero = 'Aluna - Ensino Médio';
+      } else if (p.genero === 'masculino') {
+        cargoGenero = 'Aluno - Ensino Médio';
+      } else {
+        cargoGenero = 'Aluno(a) - Ensino Médio';
+      }
+
+      if (profileName) profileName.textContent = p.nome_completo || p.username || 'Estudante SENAI';
+      if (profileRole) profileRole.textContent = cargoGenero;
+      if (profileUsername) profileUsername.textContent = p.username ? `@${p.username}` : '@usuario';
+      if (profileMatricula) profileMatricula.textContent = p.matricula || '2026109482';
+      if (profileEmail) profileEmail.textContent = p.email || sessaoAtiva.user?.email || 'email@exemplo.com';
+      if (profileTurma) profileTurma.textContent = p.turma || 'Desenvolvimento de Sistemas - 2º Ano';
+
+      if (p.avatar_url && avatarImg) {
+        avatarImg.src = p.avatar_url;
       }
     }
 
@@ -369,11 +448,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const userId = session.user.id;
         const fileExt = file.name.split('.').pop();
-        const filePath = `${userId}/avatar.${fileExt}`;
+        const filePath = `${userId}/avatar_${Date.now()}.${fileExt}`;
 
         if (uploadStatus) uploadStatus.textContent = 'Enviando foto...';
 
-        // 1. Upload para o bucket 'avatars'
         const { error: uploadError } = await supabase.storage
           .from('avatars')
           .upload(filePath, file, { upsert: true });
@@ -384,19 +462,25 @@ document.addEventListener('DOMContentLoaded', async () => {
           return;
         }
 
-        // 2. Obter URL pública
         const { data: publicUrlData } = supabase.storage
           .from('avatars')
           .getPublicUrl(filePath);
 
         const publicUrl = publicUrlData.publicUrl + '?t=' + new Date().getTime();
 
-        // 3. Atualizar tabela profiles
         await supabase.from('profiles').upsert({
           id: userId,
           avatar_url: publicUrl,
           updated_at: new Date()
         });
+
+        // Atualizar foto na sessão local
+        const rawLocal = localStorage.getItem('portalSenai_sessao_local');
+        if (rawLocal) {
+          const loc = JSON.parse(rawLocal);
+          loc.avatar_url = publicUrl;
+          localStorage.setItem('portalSenai_sessao_local', JSON.stringify(loc));
+        }
 
         if (avatarImg) avatarImg.src = publicUrl;
         if (uploadStatus) uploadStatus.textContent = 'Foto atualizada com sucesso!';

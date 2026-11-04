@@ -7,6 +7,8 @@
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Supabase JS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body data-page="home">
   <!-- Top Navigation Bar -->
@@ -24,7 +26,7 @@
       <div class="user-dropdown">
         <div class="user-profile" id="user-profile-btn">
           <i class="fas fa-user-circle user-avatar"></i>
-          <span class="user-name" id="top-user-display">Helena</span>
+          <span class="user-name" id="top-user-display">Usuário</span>
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="dropdown-menu" id="user-dropdown-menu">
@@ -51,18 +53,19 @@
       <a href="notas.html" class="nav-btn" data-page="notas"><i class="fas fa-graduation-cap"></i> Notas</a>
       <a href="login.html" class="nav-btn" data-page="login"><i class="fas fa-user-lock"></i> Entrar</a>
       <a href="contato.html" class="sub-link" data-page="contato">Contato</a>
-      <a href="#" class="sub-link">Links</a>
+      <a href="https://github.com/VictorKalashinikov" target="_blank" rel="noopener noreferrer" class="sub-link"><i class="fab fa-github"></i> Links</a>
     </div>
     <div class="senai-logo">
       <span class="fiep-text">Sistema Fiep</span>
       <span class="senai-text">SENAI</span>
     </div>
   </nav>
+
   <!-- Main Content Container -->
   <main class="main-container">
     <div class="page-content">
       <div class="welcome-card">
-        <h2>Bem-Vinda, Helena</h2>
+        <h2 id="home-welcome-title">Bem-Vindo(a)</h2>
         <p>Seus destaques e avisos importantes.</p>
       </div>
 
@@ -82,7 +85,7 @@
         <div class="card">
           <h3>Boletim Atualizado</h3>
           <div class="card-body-text">
-            <p><strong>Bem-Vinda, Helena!</strong></p>
+            <p><strong id="home-welcome-user">Bem-Vindo(a)!</strong></p>
             <p>Seus destaques e avisos importantes.</p>
           </div>
           <a href="notas.html" class="btn-link">Ver Mais</a>
@@ -98,6 +101,7 @@
       </div>
     </div>
   </main>
+
   <!-- Footer -->
   <footer class="site-footer">
     <div class="footer-container">

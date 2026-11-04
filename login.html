@@ -26,7 +26,7 @@
       <div class="user-dropdown">
         <div class="user-profile" id="user-profile-btn">
           <i class="fas fa-user-circle user-avatar"></i>
-          <span class="user-name" id="top-user-display">Helena</span>
+          <span class="user-name" id="top-user-display">Usuário</span>
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="dropdown-menu" id="user-dropdown-menu">
@@ -53,13 +53,14 @@
       <a href="notas.html" class="nav-btn" data-page="notas"><i class="fas fa-graduation-cap"></i> Notas</a>
       <a href="login.html" class="nav-btn" data-page="login"><i class="fas fa-user-lock"></i> Entrar</a>
       <a href="contato.html" class="sub-link" data-page="contato">Contato</a>
-      <a href="#" class="sub-link">Links</a>
+      <a href="https://github.com/VictorKalashinikov" target="_blank" rel="noopener noreferrer" class="sub-link"><i class="fab fa-github"></i> Links</a>
     </div>
     <div class="senai-logo">
       <span class="fiep-text">Sistema Fiep</span>
       <span class="senai-text">SENAI</span>
     </div>
   </nav>
+
   <!-- Main Content Container -->
   <main class="main-container">
     <div class="page-content">
@@ -79,10 +80,10 @@
         <!-- FORMULÁRIO DE LOGIN -->
         <form id="form-login" class="auth-form">
           <div class="form-group">
-            <label for="login-identificacao">Usuário ou E-mail</label>
+            <label for="login-identificacao">E-mail de Cadastro</label>
             <div class="input-wrapper">
-              <i class="fas fa-user input-icon"></i>
-              <input type="text" id="login-identificacao" placeholder="Digite seu usuário ou e-mail" required>
+              <i class="fas fa-envelope input-icon"></i>
+              <input type="email" id="login-identificacao" placeholder="Digite seu e-mail cadastrado" required>
             </div>
           </div>
 
@@ -117,8 +118,31 @@
             <label for="cad-usuario">Nome de Usuário</label>
             <div class="input-wrapper">
               <i class="fas fa-user-tag input-icon"></i>
-              <input type="text" id="cad-usuario" placeholder="Escolha um usuário" required>
+              <input type="text" id="cad-usuario" placeholder="Escolha um usuário (ex: victor123)" required>
             </div>
+          </div>
+
+          <div class="form-group">
+            <label for="cad-genero">Gênero</label>
+            <select id="cad-genero" required>
+              <option value="">Selecione o gênero...</option>
+              <option value="masculino">Masculino (Aluno)</option>
+              <option value="feminino">Feminino (Aluna)</option>
+              <option value="outro">Outro / Preferir não informar (Aluno(a))</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="cad-turma">Curso / Turma</label>
+            <select id="cad-turma" required>
+              <option value="">Selecione sua turma...</option>
+              <option value="Desenvolvimento de Sistemas - 1º Ano">Desenvolvimento de Sistemas - 1º Ano</option>
+              <option value="Desenvolvimento de Sistemas - 2º Ano">Desenvolvimento de Sistemas - 2º Ano</option>
+              <option value="Desenvolvimento de Sistemas - 3º Ano">Desenvolvimento de Sistemas - 3º Ano</option>
+              <option value="Automação Industrial - 1º Ano">Automação Industrial - 1º Ano</option>
+              <option value="Automação Industrial - 2º Ano">Automação Industrial - 2º Ano</option>
+              <option value="Eletrotécnica - 1º Ano">Eletrotécnica - 1º Ano</option>
+            </select>
           </div>
 
           <div class="form-group">
@@ -184,6 +208,7 @@
       </div>
     </div>
   </main>
+
   <!-- Footer -->
   <footer class="site-footer">
     <div class="footer-container">

@@ -26,7 +26,7 @@
       <div class="user-dropdown">
         <div class="user-profile" id="user-profile-btn">
           <i class="fas fa-user-circle user-avatar"></i>
-          <span class="user-name" id="top-user-display">Helena</span>
+          <span class="user-name" id="top-user-display">Usuário</span>
           <i class="fas fa-chevron-down"></i>
         </div>
         <div class="dropdown-menu" id="user-dropdown-menu">
@@ -53,7 +53,7 @@
       <a href="notas.html" class="nav-btn" data-page="notas"><i class="fas fa-graduation-cap"></i> Notas</a>
       <a href="login.html" class="nav-btn" data-page="login"><i class="fas fa-user-lock"></i> Entrar</a>
       <a href="contato.html" class="sub-link" data-page="contato">Contato</a>
-      <a href="#" class="sub-link">Links</a>
+      <a href="https://github.com/VictorKalashinikov" target="_blank" rel="noopener noreferrer" class="sub-link"><i class="fab fa-github"></i> Links</a>
     </div>
     <div class="senai-logo">
       <span class="fiep-text">Sistema Fiep</span>
@@ -76,18 +76,26 @@
           </div>
           <p id="upload-status" class="upload-status-text"></p>
 
-          <h2 id="profile-name">Helena Silva</h2>
-          <span class="profile-role">Aluna - Ensino Médio</span>
+          <h2 id="profile-name">Nome do Usuário</h2>
+          <span class="profile-role" id="profile-role">Aluno(a) - Ensino Médio</span>
         </div>
 
         <hr class="card-divider">
 
         <div class="profile-details">
           <div class="detail-item">
+            <i class="fas fa-user-tag"></i>
+            <div>
+              <strong>Usuário:</strong>
+              <p id="profile-username">@usuario</p>
+            </div>
+          </div>
+
+          <div class="detail-item">
             <i class="fas fa-id-card"></i>
             <div>
-              <strong>Matrícula:</strong>
-              <p>2026109482</p>
+              <strong>Matrícula Gerada:</strong>
+              <p id="profile-matricula">2026000000</p>
             </div>
           </div>
           
@@ -95,7 +103,7 @@
             <i class="fas fa-envelope"></i>
             <div>
               <strong>E-mail:</strong>
-              <p id="profile-email">helena.silva@aluno.senai.br</p>
+              <p id="profile-email">email@exemplo.com</p>
             </div>
           </div>
 
@@ -103,7 +111,7 @@
             <i class="fas fa-graduation-cap"></i>
             <div>
               <strong>Curso / Turma:</strong>
-              <p>Desenvolvimento de Sistemas - 2º Ano</p>
+              <p id="profile-turma">Desenvolvimento de Sistemas - 2º Ano</p>
             </div>
           </div>
 
@@ -111,7 +119,7 @@
             <i class="fas fa-building"></i>
             <div>
               <strong>Unidade:</strong>
-              <p>SENAI - Curitiba</p>
+              <p>SENAI - Curitiba / Pinhais</p>
             </div>
           </div>
         </div>
