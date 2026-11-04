@@ -1,5 +1,7 @@
 # 🎓 Portal Educacional
 
+link: https://portal-educacional-3d.netlify.app
+
 Um portal educacional desenvolvido para simular um ambiente acadêmico, reunindo funcionalidades que facilitam o acompanhamento da vida escolar dos estudantes.
 
 O projeto apresenta uma interface intuitiva e organizada, permitindo consultar informações acadêmicas, acompanhar atividades e gerenciar o acesso à plataforma.
